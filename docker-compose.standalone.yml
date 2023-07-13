@@ -1,0 +1,13 @@
+version: "3"
+services:
+  npm_generator:
+    build: .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      FORCE_SSL: true
+      NPM_USER: CHANGEME
+      NPM_PASSWORD: CHANGEME
+      NPM_HOST: CHANGEME
+      NPM_NETWORK: nginx-proxy-network #Network with NPM and Containers
+      TIMEOUT: 60000 #Timeout to check for changes if not set it will default to 60000

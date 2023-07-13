@@ -1,0 +1,33 @@
+version: "3" #Based on https://github.com/NginxProxyManager/nginx-proxy-manager/blob/develop/README.md
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: proxy-manager
+    restart: unless-stopped
+    ports:
+      - '80:80' 
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - proxydb
+    networks:
+      - nginx-proxy
+
+  npm_generator:
+    build: .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      FORCE_SSL: true
+      NPM_USER: CHANGEME
+      NPM_PASSWORD: CHANGEME
+      NPM_HOST: http://proxy-manager:81
+      NPM_NETWORK: nginx-proxy-network #Network with NPM and Containers
+      TIMEOUT: 60000 #Timeout to check for changes if not set it will default to 60000
+
+networks:
+  nginx-proxy:
+    name: nginx-proxy-network
