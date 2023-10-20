@@ -1,11 +1,11 @@
 # Version 4
-FROM node:18-alpine AS builder
+FROM node:21-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN npm install
 RUN npm run build
 
-FROM node:18-alpine AS final
+FROM node:21-alpine AS final
 WORKDIR /app
 COPY --from=builder /app/dist .
 COPY package.json ./
